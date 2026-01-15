@@ -94,7 +94,6 @@ export default function CameraStrip({
     r.readAsDataURL(file)
   }
 
-  /* 🔥 FIXED AUTO CAPTURE */
   const startAutoCapture = async () => {
     const delay =
       delayMode === "custom"
@@ -102,26 +101,11 @@ export default function CameraStrip({
         : Number(delayMode)
 
     setAutoMode(true)
-
     for (let i = 0; i < 3; i++) {
-      // reset frame
-      setShots(p => {
-        const c = [...p]
-        c[i] = null
-        return c
-      })
-
       setActive(i)
-
-      // allow preview to render
-      await new Promise(r => setTimeout(r, 400))
-
-      // countdown delay
       await new Promise(r => setTimeout(r, delay * 1000))
-
       capture(i)
     }
-
     setActive(null)
     setAutoMode(false)
   }
@@ -150,14 +134,17 @@ export default function CameraStrip({
   return (
     <div
       ref={containerRef}
+      id="sticker-canvas"
       style={{
         position: "relative",
         minHeight: "100svh",
-        width: "60%",
-        overflow: "hidden",
+        width: "100%",
+        maxWidth: 800,
+        margin: "0 auto",
+        overflowX: "hidden",
       }}
     >
-      {/* 🔥 FULL THEME BACKGROUND LAYER */}
+      {/* 🔥 FULL THEME BACKGROUND (FIX) */}
       <div
         style={{
           position: "absolute",
@@ -167,17 +154,39 @@ export default function CameraStrip({
           backgroundPosition: "center",
           filter: "brightness(0.8)",
           zIndex: 0,
+          pointerEvents: "none",
         }}
       />
 
-      {/* CONTENT LAYER */}
+      {/* 🎨 STICKER TRAY — ABOVE FRAMES */}
+      <div
+        data-html2canvas-ignore
+        style={{
+          marginBottom: 20,
+          padding: 12,
+          background: "rgba(255,255,255,0.95)",
+          borderRadius: 10,
+          display: "flex",
+          gap: 14,
+          overflowX: "auto",
+          overflowY: "hidden",
+          width: "100%",
+          maxWidth: 600,
+          margin: "0 auto",
+          WebkitOverflowScrolling: "touch",
+          scrollbarWidth: "none",
+        }}
+      />
+
+      {/* CONTENT */}
       <div
         style={{
           position: "relative",
           zIndex: 1,
           padding: 20,
-          maxWidth: 600,
-          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
           pointerEvents: "none",
         }}
       >
@@ -186,17 +195,91 @@ export default function CameraStrip({
           autoPlay
           playsInline
           muted
-          style={{ position: "absolute", width: 0, height: 0 }}
+          style={{
+            position: "absolute",
+            width: 0,
+            height: 0,
+            overflow: "hidden",
+          }}
         />
 
+        {/* DOWNLOAD */}
+        <button
+          data-html2canvas-ignore
+          onClick={downloadStrip}
+          style={{
+            pointerEvents: "auto",
+            marginTop: 20,
+            padding: "14px 28px",
+            fontSize: 18,
+            fontWeight: "bold",
+            background: "#2563eb",
+            color: "#fff",
+            border: "none",
+            borderRadius: 8,
+          }}
+        >
+          Download Photo Strip
+        </button>
+
+        {/* AUTO CONTROLS */}
+        <div
+          data-html2canvas-ignore
+          style={{
+            marginBottom: 18,
+            padding: 10,
+            background: "rgba(128, 223, 199, 0.95)",
+            borderRadius: 8,
+            marginTop: 20,
+            display: "flex",
+            gap: 12,
+            pointerEvents: "auto",
+          }}
+        >
+          <span>Auto Capture</span>
+
+          <select
+            value={delayMode}
+            onChange={e => setDelayMode(e.target.value)}
+            disabled={autoMode}
+          >
+            <option value="3">3 sec</option>
+            <option value="5">5 sec</option>
+            <option value="custom">Custom</option>
+          </select>
+
+          {delayMode === "custom" && (
+            <input
+              type="number"
+              value={customDelay}
+              onChange={e => setCustomDelay(e.target.value)}
+              placeholder="sec"
+              style={{ width: 80 }}
+            />
+          )}
+
+          <button onClick={startAutoCapture} disabled={autoMode}>
+            Start Auto
+          </button>
+        </div>
+
         {/* PHOTO STRIP */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 20,
+            width: "100%",
+            maxWidth: 600,
+          }}
+        >
           {shots.map((shot, i) => (
             <div key={i} style={{ display: "flex", gap: 16 }}>
               <div
                 style={{
                   width: "100%",
-                  aspectRatio: `${FRAME_W}/${FRAME_H}`,
+                  maxWidth: FRAME_W,
+                  aspectRatio: `${FRAME_W} / ${FRAME_H}`,
                   background: "#fff",
                   position: "relative",
                   overflow: "hidden",
@@ -205,6 +288,7 @@ export default function CameraStrip({
                 {shot ? (
                   <img
                     src={shot}
+                    alt=""
                     style={{
                       position: "absolute",
                       inset: 0,
@@ -244,13 +328,26 @@ export default function CameraStrip({
                 }}
               >
                 {!shot && active !== i && (
-                  <button onClick={() => setActive(i)}>Start</button>
+                  <button
+                    style={{ background: "#2563eb", color: "#fff" }}
+                    onClick={() => setActive(i)}
+                  >
+                    Start
+                  </button>
                 )}
 
                 {active === i && (
                   <>
-                    <button onClick={() => capture(i)}>Capture</button>
-                    <button onClick={() => fileInputRef.current.click()}>
+                    <button
+                      style={{ background: "#2563eb", color: "#fff" }}
+                      onClick={() => capture(i)}
+                    >
+                      Capture
+                    </button>
+                    <button
+                      style={{ background: "#2563eb", color: "#fff" }}
+                      onClick={() => fileInputRef.current.click()}
+                    >
                       Upload
                     </button>
                     <input
@@ -263,48 +360,17 @@ export default function CameraStrip({
                   </>
                 )}
 
-                {shot && <button onClick={() => retake(i)}>Retake</button>}
+                {shot && (
+                  <button
+                    style={{ background: "#2563eb", color: "#fff" }}
+                    onClick={() => retake(i)}
+                  >
+                    Retake
+                  </button>
+                )}
               </div>
             </div>
           ))}
-        </div>
-
-        {/* AUTO CONTROLS */}
-        <div
-          data-html2canvas-ignore
-          style={{
-            marginTop: 20,
-            display: "flex",
-            gap: 12,
-            pointerEvents: "auto",
-          }}
-        >
-          <select
-            value={delayMode}
-            onChange={e => setDelayMode(e.target.value)}
-            disabled={autoMode}
-          >
-            <option value="3">3 sec</option>
-            <option value="5">5 sec</option>
-            <option value="custom">Custom</option>
-          </select>
-
-          {delayMode === "custom" && (
-            <input
-              type="number"
-              value={customDelay}
-              onChange={e => setCustomDelay(e.target.value)}
-              placeholder="sec"
-            />
-          )}
-
-          <button onClick={startAutoCapture} disabled={autoMode}>
-            Start Auto
-          </button>
-
-          <button onClick={downloadStrip}>
-            Download Photo Strip
-          </button>
         </div>
 
         <canvas ref={canvasRef} hidden />
@@ -313,6 +379,11 @@ export default function CameraStrip({
       {/* GLOBAL STICKERS */}
       <div
         style={{
+          display: "flex",
+          gap: 14,
+          justifyContent: "center",
+          flexWrap: "wrap",
+          maxWidth: "100%",
           position: "absolute",
           inset: 0,
           zIndex: 30,

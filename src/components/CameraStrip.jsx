@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import html2canvas from "html2canvas"
 import Sticker from "./Sticker"
 
-const FRAME_W = 600
-const FRAME_H = 400
+const FRAME_W = 800
+const FRAME_H = 500
 
 export default function CameraStrip({
   background,
@@ -111,25 +111,40 @@ export default function CameraStrip({
   }
 
   const downloadStrip = async () => {
-    if (shots.some(s => !s)) {
-      alert("Please capture all 3 photos first")
-      return
-    }
-
-    const canvas = await html2canvas(containerRef.current, {
-      useCORS: true,
-      backgroundColor: null,
-      scale: 2,
-    })
-
-    canvas.toBlob(blob => {
-      const a = document.createElement("a")
-      a.href = URL.createObjectURL(blob)
-      a.download = "photobooth-strip.png"
-      a.click()
-      URL.revokeObjectURL(a.href)
-    })
+  if (shots.some(s => !s)) {
+    alert("Please capture all 3 photos first")
+    return
   }
+
+  const el = containerRef.current
+
+  // 🔥 FORCE FULL HEIGHT FOR MOBILE
+  const prevHeight = el.style.height
+  el.style.height = `${window.innerHeight}px`
+
+  // wait one frame so layout recalculates
+  await new Promise(r => requestAnimationFrame(r))
+
+  const canvas = await html2canvas(el, {
+    useCORS: true,
+    backgroundColor: null,
+    scale: 2,
+    windowWidth: document.documentElement.scrollWidth,
+    windowHeight: window.innerHeight,
+  })
+
+  // restore original height
+  el.style.height = prevHeight
+
+  canvas.toBlob(blob => {
+    const a = document.createElement("a")
+    a.href = URL.createObjectURL(blob)
+    a.download = "photobooth-strip.png"
+    a.click()
+    URL.revokeObjectURL(a.href)
+  })
+}
+
 
   return (
     <div
@@ -137,9 +152,9 @@ export default function CameraStrip({
       id="sticker-canvas"
       style={{
         position: "relative",
-        minHeight: "100svh",
+        minHeight: "100vh",
         width: "100%",
-        maxWidth: 800,
+        maxWidth: 600,
         margin: "0 auto",
         overflowX: "hidden",
       }}
@@ -152,7 +167,6 @@ export default function CameraStrip({
           backgroundImage: `url(${background})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          filter: "brightness(0.8)",
           zIndex: 0,
           pointerEvents: "none",
         }}
@@ -274,12 +288,22 @@ export default function CameraStrip({
           }}
         >
           {shots.map((shot, i) => (
-            <div key={i} style={{ display: "flex", gap: 16 }}>
+            <div
+  key={i}
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 12,
+  }}
+>
               <div
                 style={{
-                  width: "100%",
-                  maxWidth: FRAME_W,
-                  aspectRatio: `${FRAME_W} / ${FRAME_H}`,
+  width: "100%",
+  maxWidth: 420,   // 👈 mobile-friendly width
+  aspectRatio: `${FRAME_W} / ${FRAME_H}`,
+  margin: "0 auto", // 👈 centers the frame
+
                   background: "#fff",
                   position: "relative",
                   overflow: "hidden",
@@ -321,11 +345,13 @@ export default function CameraStrip({
               <div
                 data-html2canvas-ignore
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  pointerEvents: "auto",
-                }}
+  display: "flex",
+  flexDirection: "row",   // 👈 side by side
+  gap: 12,
+  justifyContent: "center",
+  pointerEvents: "auto",
+}}
+
               >
                 {!shot && active !== i && (
                   <button

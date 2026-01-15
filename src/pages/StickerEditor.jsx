@@ -75,8 +75,8 @@ export default function StickerEditor() {
           position: "absolute",
           inset: 0,
           background: "rgba(255,255,255,0.18)",
-          backdropFilter: "blur(6px)",
-          WebkitBackdropFilter: "blur(6px)",
+          backdropFilter: "blur(4px)",
+          WebkitBackdropFilter: "blur(4px)",
           zIndex: 1,
         }}
       />

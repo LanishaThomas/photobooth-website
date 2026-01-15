@@ -3,7 +3,7 @@ import html2canvas from "html2canvas"
 import Sticker from "./Sticker"
 
 const FRAME_W = 800
-const FRAME_H = 600
+const FRAME_H = 700
 
 export default function CameraStrip({
   background,

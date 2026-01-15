@@ -69,22 +69,15 @@ import snowing from "../assets/stickers/snow/snowing.png"
 import snowman from "../assets/stickers/snow/snowman.png"
 
 // =======================
-// BACKGROUNDS (NEW – IMPORTANT)
-// =======================
-import seaBg from "../assets/backgrounds/sea.jpg"
-import gardenBg from "../assets/backgrounds/garden.jpg"
-import safariBg from "../assets/backgrounds/safari.jpg"
-import starsBg from "../assets/backgrounds/starry-sky.jpg"
-import snowBg from "../assets/backgrounds/snow.jpg"
-
-// =======================
 // THEMES
 // =======================
+
+const BASE = import.meta.env.BASE_URL
 export const themes = [
   {
     id: "sea",
     name: "Sea",
-    background: seaBg,
+    background: `${BASE}backgrounds/sea.jpg`,
     stickers: [
       seashell3,
       crab,
@@ -102,7 +95,7 @@ export const themes = [
   {
     id: "garden",
     name: "Garden",
-    background: gardenBg,
+    background: `${BASE}backgrounds/garden.jpg`,
     stickers: [
       angry,
       daisy,
@@ -120,7 +113,7 @@ export const themes = [
   {
     id: "safari",
     name: "Safari",
-    background: safariBg,
+    background: `${BASE}backgrounds/safari.jpg`,
     stickers: [
       bee,
       flamingo,
@@ -138,7 +131,7 @@ export const themes = [
   {
     id: "stars",
     name: "Starry Sky",
-    background: starsBg,
+    background: `${BASE}backgrounds/starry-sky.jpg`,
     stickers: [
       asteroid,
       cloudy,
@@ -156,7 +149,7 @@ export const themes = [
   {
     id: "snow",
     name: "Snow",
-    background: snowBg,
+    background: `${BASE}backgrounds/snow.jpg`,
     stickers: [
       igloo,
       penguinSnow,

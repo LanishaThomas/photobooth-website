@@ -1,0 +1,52 @@
+.editor-root {
+  display: flex;
+  height: 100vh;
+  background: #111;
+}
+
+.editor-camera {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sticker-tray {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+
+.sticker-tray img {
+  width: 60px;
+  cursor: grab;
+}
+
+.desktop {
+  flex-direction: column;
+}
+
+.mobile {
+  display: none;
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .editor-root {
+    flex-direction: column;
+  }
+
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .editor-camera {
+    height: 100vh;
+  }
+}

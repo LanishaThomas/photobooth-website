@@ -1,0 +1,35 @@
+.booth-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.camera-strip {
+  display: flex;
+  gap: 12px;
+}
+
+.camera-frame {
+  width: 200px;
+  height: 260px;
+  background: #000;
+  border-radius: 12px;
+}
+
+.sticker-tray {
+  width: 120px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  padding: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+}
+
+.sticker {
+  width: 80px;
+  cursor: grab;
+}

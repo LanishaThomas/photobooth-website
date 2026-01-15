@@ -1,0 +1,40 @@
+.theme-page {
+  min-height: 100vh;
+  padding: 40px;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.theme-card {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.theme-card:hover {
+  transform: scale(1.05);
+}
+
+.theme-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+}

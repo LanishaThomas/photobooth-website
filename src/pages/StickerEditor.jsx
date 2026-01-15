@@ -52,7 +52,7 @@ export default function StickerEditor() {
         position: "relative",
         minHeight: "100vh",
         width: "100%",
-        overflow: "hidden",
+        overflowX: "hidden",
         display: "flex",
         justifyContent: "center",
       }}
@@ -95,22 +95,32 @@ export default function StickerEditor() {
       >
         {/* STICKER TRAY — TOP */}
         <div
-          className="tray-desktop"
-          style={{
-            position: "sticky",
-            top: 20,
-            zIndex: 100,
-            margin: "0 auto",
-            padding: 12,
-            display: "flex",
-            gap: 14,
-            
-            justifyContent: "center",
-            background: "rgba(0,0,0,0.55)",
-            backdropFilter: "blur(6px)",
-            borderRadius: 12,
-          }}
-        >
+  className="tray-desktop"
+  style={{
+    position: "sticky",
+    top: 12,
+    zIndex: 100,
+
+    width: "100%",
+    maxWidth: 600,
+    margin: "12px auto",
+
+    padding: 10,
+    display: "flex",
+    gap: 1,
+    justifyContent: "center",
+
+    background: "rgba(0,0,0,0.55)",
+    backdropFilter: "blur(6px)",
+    WebkitBackdropFilter: "blur(6px)",
+    borderRadius: 14,
+
+    overflowX: "auto",
+    scrollbarWidth: "none",
+    WebkitOverflowScrolling: "touch",
+  }}
+>
+
           {selectedTheme.stickers.map((src, i) => (
             <img
               key={i}

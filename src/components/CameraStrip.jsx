@@ -8,7 +8,6 @@ const FRAME_H = 400
 export default function CameraStrip({
   background,
   stickers,
-  onDeleteSticker,
   onSelectSticker,
 }) {
 
@@ -142,7 +141,7 @@ export default function CameraStrip({
   style={{
   position: "relative",
   minHeight: "100svh",   // ✅ mobile-safe viewport
-  width: "90%",
+  width: "100%",
   maxWidth: 600,
   margin: "0 auto",
   backgroundImage: `url(${background})`,
@@ -166,7 +165,7 @@ export default function CameraStrip({
   overflowX: "auto",        // 🔥 horizontal scroll
   overflowY: "hidden",
   width: "100%",
-maxWidth: 420,
+maxWidth: 600,
 margin: "0 auto",
 
   WebkitOverflowScrolling: "touch",
@@ -228,7 +227,7 @@ margin: "0 auto",
           style={{
             marginBottom: 18,
             padding: 10,
-            background: "rgba(255,255,255,0.95)",
+            background: "rgba(128, 223, 199, 0.95)",
             borderRadius: 8,
             marginTop: 20,
             display: "flex",
@@ -270,7 +269,7 @@ margin: "0 auto",
     flexDirection: "column",
     gap: 20,
     width: "100%",
-    maxWidth: 420,   // ✅ keeps it centered on mobile
+    maxWidth: 600,   // ✅ keeps it centered on mobile
   }}
 >
 
@@ -329,13 +328,25 @@ margin: "0 auto",
                 }}
               >
                 {!shot && active !== i && (
-                  <button onClick={() => setActive(i)}>Start</button>
+                  <button 
+                  style={{
+background: "#2563eb",
+color: "#fff"}}
+                  onClick={() => setActive(i)}>Start</button>
                 )}
 
                 {active === i && (
                   <>
-                    <button onClick={() => capture(i)}>Capture</button>
-                    <button onClick={() => fileInputRef.current.click()}>
+                    <button
+                    style={{
+background: "#2563eb",
+color: "#fff"}}
+ onClick={() => capture(i)}>Capture</button>
+                    <button 
+                    style={{
+background: "#2563eb",
+color: "#fff"}}
+onClick={() => fileInputRef.current.click()}>
                       Upload
                     </button>
                     <input
@@ -348,7 +359,11 @@ margin: "0 auto",
                   </>
                 )}
 
-                {shot && <button onClick={() => retake(i)}>Retake</button>}
+                {shot && <button 
+                style={{
+background: "#2563eb",
+color: "#fff"}}
+onClick={() => retake(i)}>Retake</button>}
               </div>
             </div>
           ))}
@@ -368,7 +383,7 @@ margin: "0 auto",
 gap: 14,
 justifyContent: "center",
 flexWrap: "wrap",   // ✅ mobile wrap
-maxWidth: "80%",
+maxWidth: "100%",
 
           position: "absolute",
           inset: 0,

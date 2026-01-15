@@ -70,17 +70,19 @@ export default function Sticker({ sticker, onSelect }) {
 
   return (
     <Rnd
-      bounds="parent"
-      style={{ pointerEvents: "auto" }}
-      default={{ x: 100, y: 100, width: 80, height: 80 }}
-      enableResizing
-      onMouseDown={() => {
-        setIsSelected(true)
-        onSelect(sticker.id)
-      }}
-      onResizeStart={() => setIsSelected(true)}
-      onResizeStop={() => setIsSelected(false)}
-    >
+  bounds="parent"
+  style={{ pointerEvents: "auto" }}
+  disableDragging={isSelected}  // 🔥 prevents conflict during rotate
+  default={{ x: 100, y: 100, width: 80, height: 80 }}
+  enableResizing
+  onMouseDown={() => {
+    setIsSelected(true)
+    onSelect(sticker.id)
+  }}
+  onResizeStart={() => setIsSelected(true)}
+  onResizeStop={() => setIsSelected(false)}
+>
+
       <div
         style={{
           width: "100%",
@@ -107,22 +109,26 @@ export default function Sticker({ sticker, onSelect }) {
 
         {/* 🔄 ROTATE HANDLE */}
         <div
-          onMouseDown={startRotateMouse}
-          onTouchStart={startRotateTouch}
-          style={{
-            position: "absolute",
-            top: -18,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: 16,
-            height: 16,
-            borderRadius: "50%",
-            background: "#2563eb",
-            cursor: "grab",
-            touchAction: "none",
-          }}
-        />
-      </div>
+  onMouseDown={startRotateMouse}
+  onTouchStart={(e) => {
+    e.stopPropagation()   // 🔥 STOP RND FROM STEALING TOUCH
+    startRotateTouch(e)
+  }}
+  style={{
+    position: "absolute",
+    top: -22,
+    left: "50%",
+    transform: "translateX(-50%)",
+    width: 20,
+    height: 20,
+    borderRadius: "50%",
+    background: "#2563eb",
+    cursor: "grab",
+    touchAction: "none",
+    zIndex: 10,           // 🔥 ABOVE RND
+  }}
+/>
+</div>
     </Rnd>
   )
 }

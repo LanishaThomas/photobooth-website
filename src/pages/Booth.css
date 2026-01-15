@@ -33,3 +33,46 @@
   width: 80px;
   cursor: grab;
 }
+
+.booth-layout {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+/* 📱 MOBILE (default) */
+.booth-layout {
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Make camera responsive */
+.booth-layout > * {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Prevent overflow */
+canvas,
+video,
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 🖥️ DESKTOP */
+@media (min-width: 768px) {
+  .booth-layout {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .booth-layout > * {
+    width: auto;
+  }
+}
+

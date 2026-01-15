@@ -140,13 +140,15 @@ export default function CameraStrip({
   ref={containerRef}
   id="sticker-canvas"
   style={{
-    position: "relative",
-    minHeight: "100vh",
-    width: "100%",
-    backgroundImage: `url(${background})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  }}
+  position: "relative",
+  minHeight: "100svh",   // ✅ mobile-safe viewport
+  width: "100%",
+  backgroundImage: `url(${background})`,
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  overflowX: "hidden",  // ✅ prevent sideways scroll
+}}
+
 >
 
             {/* 🎨 STICKER TRAY — ABOVE FRAMES */}
@@ -253,17 +255,28 @@ export default function CameraStrip({
         </div>
 
         {/* PHOTO STRIP */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <div
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    gap: 20,
+    width: "100%",
+    maxWidth: 420,   // ✅ keeps it centered on mobile
+  }}
+>
+
           {shots.map((shot, i) => (
             <div key={i} style={{ display: "flex", gap: 16 }}>
               <div
                 style={{
-                  width: FRAME_W,
-                  height: FRAME_H,
-                  background: "#fff",
-                  position: "relative",
-                  overflow: "hidden",
-                }}
+  width: "100%",
+  maxWidth: FRAME_W,   // desktop keeps size
+  aspectRatio: `${FRAME_W} / ${FRAME_H}`, // 🔥 magic
+  background: "#fff",
+  position: "relative",
+  overflow: "hidden",
+}}
+
               >
                 {shot ? (
                   <img
@@ -342,6 +355,12 @@ export default function CameraStrip({
       {/* 🔥 GLOBAL STICKERS (TOPMOST) */}
       <div
         style={{
+          display: "flex",
+gap: 14,
+justifyContent: "center",
+flexWrap: "wrap",   // ✅ mobile wrap
+maxWidth: "100%",
+
           position: "absolute",
           inset: 0,
           zIndex: 30,

@@ -94,7 +94,7 @@ export default function StickerEditor() {
         }}
       >
         {/* STICKER TRAY — TOP */}
-        <div
+<div
   className="tray-desktop"
   style={{
     position: "sticky",
@@ -104,33 +104,41 @@ export default function StickerEditor() {
     width: "100%",
     maxWidth: 600,
     margin: "12px auto",
-
     padding: 10,
-    display: "flex",
-    gap: 1,
-    justifyContent: "center",
+
+    /* 🔑 GRID MAGIC */
+    display: "grid",
+    gridTemplateColumns: "repeat(5, 1fr)", // 5 stickers per row
+    gap: 10,
+    justifyItems: "center",
 
     background: "rgba(0,0,0,0.55)",
     backdropFilter: "blur(6px)",
     WebkitBackdropFilter: "blur(6px)",
     borderRadius: 14,
 
-    overflowX: "auto",
+    maxHeight: 220,          // optional scroll control
+    overflowY: "auto",
     scrollbarWidth: "none",
-    WebkitOverflowScrolling: "touch",
   }}
 >
+  {selectedTheme.stickers.map((src, i) => (
+    <img
+      key={i}
+      src={src}
+      style={{
+        width: 60,
+        height: 60,
+        objectFit: "contain",
+        cursor: "grab",
+        userSelect: "none",
+      }}
+      onMouseDown={() => addSticker(src)}
+      draggable={false}
+    />
+  ))}
+</div>
 
-          {selectedTheme.stickers.map((src, i) => (
-            <img
-              key={i}
-              src={src}
-              style={{ width: 60, cursor: "grab" }}
-              onMouseDown={() => addSticker(src)}
-              draggable={false}
-            />
-          ))}
-        </div>
 
         {/* CAMERA STRIP */}
         <div

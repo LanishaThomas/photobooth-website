@@ -142,8 +142,8 @@ export default function CameraStrip({
   style={{
   position: "relative",
   minHeight: "100svh",   // ✅ mobile-safe viewport
-  width: "70%",
-  maxWidth: 420,
+  width: "90%",
+  maxWidth: 600,
   margin: "0 auto",
   backgroundImage: `url(${background})`,
   backgroundSize: "cover",
@@ -165,7 +165,10 @@ export default function CameraStrip({
   gap: 14,
   overflowX: "auto",        // 🔥 horizontal scroll
   overflowY: "hidden",
-  maxWidth: "100%",
+  width: "100%",
+maxWidth: 420,
+margin: "0 auto",
+
   WebkitOverflowScrolling: "touch",
   scrollbarWidth: "none",   // Firefox
 }}
@@ -365,7 +368,7 @@ export default function CameraStrip({
 gap: 14,
 justifyContent: "center",
 flexWrap: "wrap",   // ✅ mobile wrap
-maxWidth: "100%",
+maxWidth: "80%",
 
           position: "absolute",
           inset: 0,

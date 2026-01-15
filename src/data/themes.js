@@ -69,13 +69,22 @@ import snowing from "../assets/stickers/snow/snowing.png"
 import snowman from "../assets/stickers/snow/snowman.png"
 
 // =======================
+// BACKGROUNDS (NEW – IMPORTANT)
+// =======================
+import seaBg from "../assets/backgrounds/sea.jpg"
+import gardenBg from "../assets/backgrounds/garden.jpg"
+import safariBg from "../assets/backgrounds/safari.jpg"
+import starsBg from "../assets/backgrounds/starry-sky.jpg"
+import snowBg from "../assets/backgrounds/snow.jpg"
+
+// =======================
 // THEMES
 // =======================
 export const themes = [
   {
     id: "sea",
     name: "Sea",
-    background: "/backgrounds/sea.jpg",
+    background: seaBg,
     stickers: [
       seashell3,
       crab,
@@ -93,7 +102,7 @@ export const themes = [
   {
     id: "garden",
     name: "Garden",
-    background: "/backgrounds/garden.jpg",
+    background: gardenBg,
     stickers: [
       angry,
       daisy,
@@ -111,7 +120,7 @@ export const themes = [
   {
     id: "safari",
     name: "Safari",
-    background: "/backgrounds/safari.jpg",
+    background: safariBg,
     stickers: [
       bee,
       flamingo,
@@ -129,7 +138,7 @@ export const themes = [
   {
     id: "stars",
     name: "Starry Sky",
-    background: "/backgrounds/starry-sky.jpg",
+    background: starsBg,
     stickers: [
       asteroid,
       cloudy,
@@ -147,7 +156,7 @@ export const themes = [
   {
     id: "snow",
     name: "Snow",
-    background: "/backgrounds/snow.jpg",
+    background: snowBg,
     stickers: [
       igloo,
       penguinSnow,

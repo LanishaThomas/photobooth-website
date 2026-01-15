@@ -338,7 +338,7 @@ useEffect(() => {
     width: "100%",
     height: "100%",
     objectFit: "cover",
-    opacity: !shot && active === i ? 1 : 0,
+    opacity: active === i ? 1 : 0,
     transition: "opacity 0.15s linear",
   }}
 />
@@ -354,6 +354,8 @@ useEffect(() => {
       width: "100%",
       height: "100%",
       objectFit: "cover",
+      opacity: active === i ? 0 : 1,   // 👈 ADD THIS
+      transition: "opacity 0.15s linear",
     }}
   />
 )}

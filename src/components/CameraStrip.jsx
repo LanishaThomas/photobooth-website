@@ -14,14 +14,19 @@ export default function CameraStrip({
   const canvasRef = useRef(null)
   const containerRef = useRef(null)
   const fileInputRef = useRef(null)
+  const previewRefs = useRef([])
 
   const [shots, setShots] = useState([null, null, null])
   const [active, setActive] = useState(null)
+  
+  const shotsRef = useRef(shots)
+  // ✅ ADDED (ONLY NEW STATE)
+  const [countdown, setCountdown] = useState(null)
 
   const [autoMode, setAutoMode] = useState(false)
   const [delayMode, setDelayMode] = useState("5")
   const [customDelay, setCustomDelay] = useState("")
-
+  
   useEffect(() => {
     async function startCamera() {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -34,6 +39,19 @@ export default function CameraStrip({
     }
     startCamera()
   }, [])
+
+  useEffect(() => {
+  shotsRef.current = shots
+}, [shots])
+
+useEffect(() => {
+  previewRefs.current.forEach(v => {
+    if (v && videoRef.current?.srcObject) {
+      v.srcObject = videoRef.current.srcObject
+    }
+  })
+  
+}, [videoRef.current?.srcObject])
 
   const capture = (index) => {
     const video = videoRef.current
@@ -69,7 +87,6 @@ export default function CameraStrip({
       return c
     })
 
-    setActive(null)
   }
 
   const retake = (i) => {
@@ -94,57 +111,76 @@ export default function CameraStrip({
     r.readAsDataURL(file)
   }
 
+  // ✅ MODIFIED INTERNALLY (LOGIC SAME + COUNTDOWN)
   const startAutoCapture = async () => {
-    const delay =
-      delayMode === "custom"
-        ? Number(customDelay) || 3
-        : Number(delayMode)
+  if (autoMode) return
 
-    setAutoMode(true)
-    for (let i = 0; i < 3; i++) {
-      setActive(i)
-      await new Promise(r => setTimeout(r, delay * 1000))
-      capture(i)
-    }
-    setActive(null)
-    setAutoMode(false)
+  setAutoMode(true)
+
+  const delay =
+    delayMode === "custom"
+      ? Number(customDelay) || 3
+      : Number(delayMode)
+
+  for (let i = 0; i < 3; i++) {
+    // 🔥 ALWAYS PREVIEW
+    setActive(i)
+
+    let t = delay
+    setCountdown(t)
+
+    await new Promise(resolve => {
+      const interval = setInterval(() => {
+        t--
+        if (t === 0) {
+          clearInterval(interval)
+          setCountdown(null)
+          resolve()
+        } else {
+          setCountdown(t)
+        }
+      }, 1000)
+    })
+
+    // 🔥 ALWAYS CAPTURE (RETAKE)
+    capture(i)
   }
 
-  const downloadStrip = async () => {
-  if (shots.some(s => !s)) {
-    alert("Please capture all 3 photos first")
-    return
-  }
-
-  const el = containerRef.current
-
-  // 🔥 FORCE FULL HEIGHT FOR MOBILE
-  const prevHeight = el.style.height
-  el.style.height = `${window.innerHeight}px`
-
-  // wait one frame so layout recalculates
-  await new Promise(r => requestAnimationFrame(r))
-
-  const canvas = await html2canvas(el, {
-    useCORS: true,
-    backgroundColor: null,
-    scale: 2,
-    windowWidth: document.documentElement.scrollWidth,
-    windowHeight: window.innerHeight,
-  })
-
-  // restore original height
-  el.style.height = prevHeight
-
-  canvas.toBlob(blob => {
-    const a = document.createElement("a")
-    a.href = URL.createObjectURL(blob)
-    a.download = "photobooth-strip.png"
-    a.click()
-    URL.revokeObjectURL(a.href)
-  })
+  setActive(null)
+  setAutoMode(false)
 }
 
+
+  const downloadStrip = async () => {
+    if (shots.some(s => !s)) {
+      alert("Please capture all 3 photos first")
+      return
+    }
+
+    const el = containerRef.current
+    const prevHeight = el.style.height
+    el.style.height = `${window.innerHeight}px`
+
+    await new Promise(r => requestAnimationFrame(r))
+
+    const canvas = await html2canvas(el, {
+      useCORS: true,
+      backgroundColor: null,
+      scale: 2,
+      windowWidth: document.documentElement.scrollWidth,
+      windowHeight: window.innerHeight,
+    })
+
+    el.style.height = prevHeight
+
+    canvas.toBlob(blob => {
+      const a = document.createElement("a")
+      a.href = URL.createObjectURL(blob)
+      a.download = "photobooth-strip.png"
+      a.click()
+      URL.revokeObjectURL(a.href)
+    })
+  }
 
   return (
     <div
@@ -159,7 +195,7 @@ export default function CameraStrip({
         overflowX: "hidden",
       }}
     >
-      {/* 🔥 FULL THEME BACKGROUND (FIX) */}
+      {/* 🔥 FULL THEME BACKGROUND */}
       <div
         style={{
           position: "absolute",
@@ -169,26 +205,6 @@ export default function CameraStrip({
           backgroundPosition: "center",
           zIndex: 0,
           pointerEvents: "none",
-        }}
-      />
-
-      {/* 🎨 STICKER TRAY — ABOVE FRAMES */}
-      <div
-        data-html2canvas-ignore
-        style={{
-          marginBottom: 20,
-          padding: 12,
-          background: "rgba(255,255,255,0.95)",
-          borderRadius: 10,
-          display: "flex",
-          gap: 14,
-          overflowX: "auto",
-          overflowY: "hidden",
-          width: "100%",
-          maxWidth: 600,
-          margin: "0 auto",
-          WebkitOverflowScrolling: "touch",
-          scrollbarWidth: "none",
         }}
       />
 
@@ -289,69 +305,95 @@ export default function CameraStrip({
         >
           {shots.map((shot, i) => (
             <div
-  key={i}
-  style={{
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 12,
-  }}
->
+              key={i}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 12,
+              }}
+            >
               <div
                 style={{
-  width: "100%",
-  maxWidth: 420,   // 👈 mobile-friendly width
-  aspectRatio: `${FRAME_W} / ${FRAME_H}`,
-  margin: "0 auto", // 👈 centers the frame
-
+                  width: "100%",
+                  maxWidth: 420,
+                  aspectRatio: `${FRAME_W} / ${FRAME_H}`,
+                  margin: "0 auto",
                   background: "#fff",
                   position: "relative",
                   overflow: "hidden",
                 }}
               >
-                {shot ? (
-                  <img
-                    src={shot}
-                    alt=""
+                {/* VIDEO (always mounted, no flicker) */}
+{/* VIDEO (always mounted, no flicker) */}
+<video
+  autoPlay
+  playsInline
+  muted
+  ref={el => (previewRefs.current[i] = el)}
+
+  style={{
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    opacity: !shot && active === i ? 1 : 0,
+    transition: "opacity 0.15s linear",
+  }}
+/>
+
+{/* IMAGE */}
+{shot && (
+  <img
+    src={shot}
+    alt=""
+    style={{
+      position: "absolute",
+      inset: 0,
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+    }}
+  />
+)}
+
+{/* EMPTY STATE */}
+{!shot && active !== i && <span>Empty</span>}
+
+                {/* ✅ COUNTDOWN OVERLAY (ONLY VISUAL ADDITION) */}
+                {active === i && (
+                  <div
                     style={{
                       position: "absolute",
                       inset: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 72,
+                      fontWeight: 800,
+                      color: "#fff",
+                      background: "rgba(0,0,0,0.0.5)",
+                      pointerEvents: "none",
+                      zIndex: 20,
+                      opacity: countdown ? 1 : 0,
+                      transition: "opacity 0.2s ease",
                     }}
-                  />
-                ) : active === i ? (
-                  <video
-                    autoPlay
-                    playsInline
-                    muted
-                    ref={el =>
-                      el && (el.srcObject = videoRef.current.srcObject)
-                    }
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                ) : (
-                  <span>Empty</span>
+                  >
+                    {countdown}
+                  </div>
                 )}
               </div>
 
               <div
                 data-html2canvas-ignore
                 style={{
-  display: "flex",
-  flexDirection: "row",   // 👈 side by side
-  gap: 12,
-  justifyContent: "center",
-  pointerEvents: "auto",
-}}
-
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 12,
+                  justifyContent: "center",
+                  pointerEvents: "auto",
+                }}
               >
                 {!shot && active !== i && (
                   <button

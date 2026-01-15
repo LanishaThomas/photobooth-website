@@ -100,10 +100,11 @@ export default function StickerEditor() {
             position: "sticky",
             top: 20,
             zIndex: 100,
-            margin: "20px 0",
+            margin: "0 auto",
             padding: 12,
             display: "flex",
             gap: 14,
+            
             justifyContent: "center",
             background: "rgba(0,0,0,0.55)",
             backdropFilter: "blur(6px)",

@@ -142,7 +142,9 @@ export default function CameraStrip({
   style={{
   position: "relative",
   minHeight: "100svh",   // ✅ mobile-safe viewport
-  width: "100%",
+  width: "70%",
+  maxWidth: 420,
+  margin: "0 auto",
   backgroundImage: `url(${background})`,
   backgroundSize: "cover",
   backgroundPosition: "center",
@@ -155,15 +157,19 @@ export default function CameraStrip({
 <div
   data-html2canvas-ignore
   style={{
-    marginBottom: 20,
-    padding: 12,
-    background: "rgba(255,255,255,0.95)",
-    borderRadius: 10,
-    display: "flex",
-    gap: 14,
-    justifyContent: "center",
-    zIndex: 20,
-  }}
+  marginBottom: 20,
+  padding: 12,
+  background: "rgba(255,255,255,0.95)",
+  borderRadius: 10,
+  display: "flex",
+  gap: 14,
+  overflowX: "auto",        // 🔥 horizontal scroll
+  overflowY: "hidden",
+  maxWidth: "100%",
+  WebkitOverflowScrolling: "touch",
+  scrollbarWidth: "none",   // Firefox
+}}
+
 >
   {/* sticker icons go here */}
 </div>

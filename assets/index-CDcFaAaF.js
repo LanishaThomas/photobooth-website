@@ -20,4 +20,4 @@ Please change the parent <Route path="${v}"> to <Route path="${v==="/"?"*":`${v}
             display: none;
           }
         }
-      `})]})}function kS(){return W.jsx(Yv,{children:W.jsxs(Uv,{children:[W.jsx(Bs,{path:"/",element:W.jsx(Wm,{})}),W.jsx(Bs,{path:"/booth/:theme",element:W.jsx(jS,{})}),W.jsx(Bs,{path:"/booth/:theme/stickers",element:W.jsx(qS,{})})]})})}yU.createRoot(document.getElementById("root")).render(W.jsx(wU.StrictMode,{children:W.jsx(kS,{})}));
+      `})]})}function kS(){return W.jsx(Yv,{basename:"/photobooth-website",children:W.jsxs(Uv,{children:[W.jsx(Bs,{path:"/",element:W.jsx(Wm,{})}),W.jsx(Bs,{path:"/booth/:theme",element:W.jsx(jS,{})}),W.jsx(Bs,{path:"/booth/:theme/stickers",element:W.jsx(qS,{})})]})})}yU.createRoot(document.getElementById("root")).render(W.jsx(wU.StrictMode,{children:W.jsx(kS,{})}));

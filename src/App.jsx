@@ -5,7 +5,7 @@ import StickerEditor from "./pages/StickerEditor"
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/photobooth-website">
       <Routes>
         {/* Theme selection page */}
         <Route path="/" element={<ThemeSelect />} />

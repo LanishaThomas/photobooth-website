@@ -48,24 +48,34 @@ export default function ThemeSelect() {
               borderRadius: 16,
               cursor: "pointer",
               backgroundImage: `url(${theme.background})`,
-              background: "rgba(255,255,255,0.18)",
-    backdropFilter: "blur(6px)",
               backgroundSize: "cover",
               backgroundPosition: "center",
               position: "relative",
               overflow: "hidden",
               transition: "transform 0.2s ease",
             }}
-            onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
-            onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+            onMouseEnter={e =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseLeave={e =>
+              (e.currentTarget.style.transform = "scale(1)")
+            }
           >
-            {/* OVERLAY */}
+            {/* SOFT OVERLAY — NO backdrop-filter */}
             <div
               style={{
                 position: "absolute",
                 inset: 0,
-                background: "rgba(0,0,0,0.4)",
-                
+                background:
+                  "linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.35))",
+              }}
+            />
+
+            {/* TEXT */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -73,9 +83,10 @@ export default function ThemeSelect() {
                 fontSize: 22,
                 fontWeight: "bold",
                 textTransform: "capitalize",
+                textShadow: "0 2px 6px rgba(0,0,0,0.6)",
               }}
             >
-              {theme.id.replace("-", " ")}
+              {theme.name}
             </div>
           </div>
         ))}

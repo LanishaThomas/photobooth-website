@@ -162,14 +162,27 @@ useEffect(() => {
     el.style.height = `${window.innerHeight}px`
 
     await new Promise(r => requestAnimationFrame(r))
+// remove selection borders temporarily
+const selectedBoxes = el.querySelectorAll("[data-sticker-box]")
+selectedBoxes.forEach(box => {
+  box.dataset.prevBorder = box.style.border
+  box.style.border = "none"
+})
 
     const canvas = await html2canvas(el, {
-      useCORS: true,
-      backgroundColor: null,
-      scale: 2,
-      windowWidth: document.documentElement.scrollWidth,
-      windowHeight: window.innerHeight,
-    })
+  useCORS: true,
+  backgroundColor: null,
+  scale: 2,
+  windowWidth: document.documentElement.scrollWidth,
+  windowHeight: window.innerHeight,
+
+  ignoreElements: (el) =>
+    el.classList?.contains("export-hide"),
+})
+selectedBoxes.forEach(box => {
+  box.style.border = box.dataset.prevBorder || ""
+  delete box.dataset.prevBorder
+})
 
     el.style.height = prevHeight
 

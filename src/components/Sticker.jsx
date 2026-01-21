@@ -72,7 +72,7 @@ export default function Sticker({ sticker, onSelect }) {
     <Rnd
   bounds="parent"
   style={{ pointerEvents: "auto" }}
-  disableDragging={isSelected}  // 🔥 prevents conflict during rotate
+  disableDragging={false}  // 🔥 prevents conflict during rotate
   default={{ x: 100, y: 100, width: 80, height: 80 }}
   enableResizing
   onMouseDown={() => {
@@ -84,17 +84,19 @@ export default function Sticker({ sticker, onSelect }) {
 >
 
       <div
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "relative",
-          cursor: "move",
-          transform: `rotate(${rotation}deg)`,
-          border: isSelected ? "2px dashed #00e5ff" : "none",
-          boxSizing: "border-box",
-          touchAction: "none", // 🔥 REQUIRED FOR MOBILE
-        }}
-      >
+  data-sticker-box
+  style={{
+    width: "100%",
+    height: "100%",
+    position: "relative",
+    cursor: "move",
+    transform: `rotate(${rotation}deg)`,
+    border: isSelected ? "2px dashed #00e5ff" : "none",
+    boxSizing: "border-box",
+    touchAction: "none",
+  }}
+>
+
         <img
           src={sticker.src}
           draggable={false}
@@ -108,7 +110,7 @@ export default function Sticker({ sticker, onSelect }) {
         />
 
         {/* 🔄 ROTATE HANDLE */}
-        <div
+        <div className="export-hide"
   onMouseDown={startRotateMouse}
   onTouchStart={(e) => {
     e.stopPropagation()   // 🔥 STOP RND FROM STEALING TOUCH

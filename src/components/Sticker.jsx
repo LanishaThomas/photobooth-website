@@ -124,7 +124,7 @@ export default function Sticker({ sticker, onSelect }) {
     width: 20,
     height: 20,
     borderRadius: "50%",
-    background: "#2563eb",
+    background: "#FFFFFF",
     cursor: "grab",
     touchAction: "none",
     zIndex: 10,           // 🔥 ABOVE RND

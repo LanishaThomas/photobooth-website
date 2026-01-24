@@ -91,7 +91,7 @@ export default function Sticker({ sticker, onSelect }) {
     position: "relative",
     cursor: "move",
     transform: `rotate(${rotation}deg)`,
-    border: isSelected ? "2px dashed #00e5ff" : "none",
+    border: isSelected ? "2px dashed #FFFFFF" : "none",
     boxSizing: "border-box",
     touchAction: "none",
   }}

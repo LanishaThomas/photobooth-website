@@ -83,7 +83,16 @@ useEffect(() => {
       sy = (video.videoHeight - sh) / 2
     }
 
-    ctx.drawImage(video, sx, sy, sw, sh, 0, 0, FRAME_W, FRAME_H)
+    ctx.save()
+
+// mirror horizontally
+ctx.translate(FRAME_W, 0)
+ctx.scale(-1, 1)
+
+ctx.drawImage(video, sx, sy, sw, sh, 0, 0, FRAME_W, FRAME_H)
+
+ctx.restore()
+
 
     setShots(p => {
       const c = [...p]
@@ -357,6 +366,7 @@ selectedBoxes.forEach(box => {
     width: "100%",
     height: "100%",
     objectFit: "cover",
+    transform: "scaleX(-1)",
     opacity: active === i ? 1 : 0,
     transition: "opacity 0.15s linear",
   }}

@@ -15,6 +15,8 @@ export default function CameraStrip({
   const containerRef = useRef(null)
   const fileInputRef = useRef(null)
   const previewRefs = useRef([])
+  const [videoReady, setVideoReady] = useState(false)
+
 
   const [shots, setShots] = useState([null, null, null])
   const [active, setActive] = useState(null)
@@ -52,6 +54,8 @@ useEffect(() => {
   })
   
 }, [videoRef.current?.srcObject])
+  
+
 
   const capture = (index) => {
     const video = videoRef.current
@@ -87,6 +91,7 @@ useEffect(() => {
       return c
     })
 
+    setActive(null)
   }
 
   const retake = (i) => {
@@ -235,6 +240,7 @@ selectedBoxes.forEach(box => {
       >
         <video
           ref={videoRef}
+          onLoadedMetadata={() => setVideoReady(true)}
           autoPlay
           playsInline
           muted
@@ -413,7 +419,11 @@ selectedBoxes.forEach(box => {
                 {!shot && active !== i && (
                   <button
                     style={{ background: "#2563eb", color: "#fff" }}
-                    onClick={() => setActive(i)}
+                    onClick={() => {
+  setActive(i)
+  setTimeout(() => {}, 0)
+}}
+
                   >
                     Start
                   </button>
@@ -422,11 +432,13 @@ selectedBoxes.forEach(box => {
                 {active === i && (
                   <>
                     <button
-                      style={{ background: "#2563eb", color: "#fff" }}
-                      onClick={() => capture(i)}
-                    >
-                      Capture
-                    </button>
+                    style={{ background: "#2563eb", color: "#fff" }}
+  disabled={!videoReady}
+  onClick={() => capture(i)}
+>
+  Capture
+</button>
+
                     <button
                       style={{ background: "#2563eb", color: "#fff" }}
                       onClick={() => fileInputRef.current.click()}
@@ -443,14 +455,14 @@ selectedBoxes.forEach(box => {
                   </>
                 )}
 
-                {shot && (
-                  <button
-                    style={{ background: "#2563eb", color: "#fff" }}
-                    onClick={() => retake(i)}
-                  >
-                    Retake
-                  </button>
-                )}
+              {shot && (
+                <button
+                  style={{ background: "#2563eb", color: "#fff" }}
+                  onClick={() => retake(i)}
+                >
+                  Retake
+                </button>
+              )}
               </div>
             </div>
           ))}
